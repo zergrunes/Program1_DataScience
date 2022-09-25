@@ -19,3 +19,8 @@ import pandas as pd
 
 reader = pd.read_csv("rainfall.txt", delimiter=" ", header=None).to_dict()[0]
 print(reader)
+
+'''
+  git config --global user.email "you@example.com"
+  git config --global user.name "Your Name"
+'''

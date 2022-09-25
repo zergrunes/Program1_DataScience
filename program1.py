@@ -1,26 +1,34 @@
 '''
 Marian Remoroza
 CS 2410 Data Science
-Program 1: Python Control Structures, Functions, and Text File Processin
+Program 1: Python Control Structures, Functions, and Text File Processing
 '''
-# Instructions: Given the rainfall.txt file, which consists of a city name and a rainfall value in inches,
-# write a python codes for the following tasks:
-#   1. A function that returns (city, rainfall_value) for the city with the highest/largest rainfall;
-#   2. A function that returns (city, rainfall_value) for the city with the lowest/smallest rainfall;
-#   3. A function that returns the mean rainfall value;
-#   4. A function that returns the number of cities with rainfall greater than the mean value;
-#   5. A main function that opens the text file, reads in data (each line is a city and its rainfall in inches),
-#      convert the rainfall data to centimeter, then call each of the above function to get the required result.
-#      Display each result in proper format and in the unit of centimeters.
-#   6. Call the main function to run the program
-
 #!/usr/bin/python
 import pandas as pd
+cm = 0
+rainfall = open("rainfall.txt", "r")
+rf_cm = open("rainfall_cm.txt", "w")
+for line in rainfall:
+    values = line.split()
+    inches = float(values[1])
+    cm = inches*2.54
+    rf_cm.write(f"{values[0]} {cm}\n")
+rainfall.close()
+rf_cm.close()
 
-reader = pd.read_csv("rainfall.txt", delimiter=" ", header=None).to_dict()[0]
-print(reader)
+df = pd.read_csv("rainfall_cm.txt", sep=" ", header=None,
+                 names=["City", "Rainfall Value"])
 
-'''
-  git config --global user.email "you@example.com"
-  git config --global user.name "Your Name"
-'''
+df2 = pd.read_csv("rainfall.txt", sep=" ", header=None,
+                  names=["City", "Rainfall Value in Inches"])
+print(df2)
+# highest rainfall
+high_rf = df.max()
+print("City with the highest rainfall:\n", high_rf)
+# lowest rainfall
+low_rf = df.min()
+print("City with the least amount of rainfall:\n", low_rf)
+# mean rainfall
+rf_mean = df['Rainfall Value'].mean()
+print("The mean rainfall value is:", rf_mean, "cm")
+# number of cities with rainfall greater than the mean

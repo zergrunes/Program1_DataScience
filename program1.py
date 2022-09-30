@@ -1,39 +1,59 @@
-'''
-Marian Remoroza
-CS 2410 Data Science
-Program 1: Python Control Structures, Functions, and Text File Processing
-'''
+# IM GOING TO KILL MYSELF
 #!/usr/bin/python
-import pandas as pd
 
-cm = 0
-rainfall = open("rainfall.txt", "r")  # opening rainfall.txt
-rf_cm = open("rainfall_cm.txt", "w")  # new file for cm values
+def high_rf(cities, rainfall):
+    high = rainfall[0]
+    high_city = cities[0]
+    for i in range(len(cities)):
+        if rainfall[i] > high:
+            high = rainfall[i]
+            high_city = cities[i]
+    return (high_city, high)
 
-for line in rainfall:  # converting rainfall.txt values to cm and then writing it to a new file
-    values = line.split()
-    inches = float(values[1])
-    cm = inches*2.54  # conversion
-    rf_cm.write(f"{values[0]} {cm}\n")
-rainfall.close()
-rf_cm.close()
 
-df = pd.read_csv("rainfall_cm.txt", sep=" ", header=None,
-                 names=["City", "Rainfall Value"])  # OG rainfall file
+def low_rf(cities, rainfall):
+    low = rainfall[0]
+    low_city = cities[0]
+    for i in range(len(cities)):
+        if rainfall[i] < low:
+            low = rainfall[i]
+            low_city = cities[i]
+    return (low_city, low)
 
-df2 = pd.read_csv("rainfall.txt", sep=" ", header=None,
-                  names=["City", "Rainfall Value (in)"])  # rainfall file to use for output
-print(df2)
 
-high_rf = df.loc[df["Rainfall Value"].idxmax()]  # highest rainfall
-print("City with the most amount of rainfall:\n", high_rf)
+def mean_rf(rainfall):
+    x = 0
+    for i in range(len(rainfall)):
+        x += rainfall[i]
+    return (x/len(rainfall))
 
-low_rf = df.min()   # lowest rainfall
-print("City with the least amount of rainfall:\n", low_rf)
 
-rf_mean = df['Rainfall Value'].mean()   # mean rainfall
-rf = "{:.2f}".format(rf_mean)
-print("The mean rainfall value is:", rf, "cm")
-# number of cities with rainfall greater than the mean
-# count values in one column w/ condition: len(df[df['Rainfall Value']==])
-# print("There are ", , " of cities greater than the mean rainfall value.")
+def above_mean(cities, rainfall, mean_rf):
+    count = 0
+    print("Cities above the mean rainfall:\n")
+    for i in range(len(rainfall)):
+        if mean_rf < rainfall[i]:
+            print(cities[i], rainfall[i])
+
+
+def main():
+    cities = []
+    rainfall_value = []
+    fo = open("rainfall.txt", "r")
+    read = fo.readlines()
+    for line in read:
+        city, rf = line.split(" ")
+        cities.append(city)
+        rainfall_value.append(float(rf)*2.54)
+
+    print("City with the most amount of rainfall:",
+          high_rf(cities, rainfall_value), "\n")
+    print("City with the least amount of rainfall:", low_rf(
+        cities, rainfall_value), "\n")
+    m = mean_rf(rainfall_value)
+    f = "{:.2f}".format(m)
+    print("The mean rainfall value is:", f, "cm")
+    above_mean(cities, rainfall_value, m)
+
+
+main()
